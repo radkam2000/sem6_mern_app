@@ -12,7 +12,7 @@ const VideoPlayer = ({ videoId }) => {
 	return (
 		<video ref={videoRef} width="320" height="240" controls autoPlay>
 			<source
-				src={`http://localhost:5000/videos/${videoId}`}
+				src={`http://localhost:5000/api/videos/${videoId}`}
 				type="video/mp4"
 			></source>
 		</video>
