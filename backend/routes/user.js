@@ -1,16 +1,17 @@
-const router = require("react").Router();
-
+const router = require("express").Router();
+const { User, validate } = require("../models/User");
+const bcrypt = require("bcrypt");
 router.get("/", async (req, res) => {
 	User.find()
 		.exec()
 		.then(async () => {
-			const users = await User.find({ _id: req.user._id });
+			const user = await User.find({ _id: req.user._id });
 			//konfiguracja odpowiedzi res z przekazaniem listy użytkowników:
 			res.status(200).send({
-				data: users,
+				data: user,
 				message: "Account Data",
 			});
-			console.log(users);
+			console.log(user);
 		})
 		.catch((error) => {
 			res.status(500).send({ message: error.message });
@@ -22,21 +23,61 @@ router.delete("/", (req, res) => {
 		.exec()
 		.then(async () => {
 			console.log(`delete user: ${req.user._id}`);
-			const users = await User.deleteOne({ _id: req.user._id });
-			//konfiguracja odpowiedzi res z przekazaniem listy użytkowników:
-			res.redirect("/");
+			await User.deleteOne({ _id: req.user._id });
+			res.redirect([307], "/");
 		})
 		.catch((error) => {
 			res.status(500).send({ message: error.message });
 		});
 });
 
-router.post("/register", (req, res) => {
-	res.status(200).send("registration");
+router.post("/password", (req, res) => {
+	User.find()
+		.exec()
+		.then(async () => {
+			const user = await User.find({ _id: req.user._id });
+			const salt = await bcrypt.genSalt(Number(process.env.SALT));
+			const hashOldPassword = await bcrypt.hash(
+				req.body.oldPassword,
+				salt
+			);
+			if (user.password === req.body.oldPassword) {
+				const hashNewPassword = await bcrypt.hash(
+					req.body.newPassword,
+					salt
+				);
+				user.password = hashNewPassword;
+				await user.save();
+				res.status(200).send({
+					message: "Password changed succesfully",
+				});
+			} else {
+				res.status(409).send({ message: "Wrong old Password" });
+			}
+		})
+		.catch((error) => {
+			res.status(500).send({ message: error.message });
+		});
 });
 
-router.post("/password", (req, res) => {
-	res.status(200).send("password change");
+router.post("/register", async (req, res) => {
+	try {
+		const { error } = validate(req.body);
+		if (error)
+			return res.status(400).send({ message: error.details[0].message });
+		const user = await User.findOne({ email: req.body.email });
+		if (user)
+			return res
+				.status(409)
+				.send({ message: "User with given email already Exist!" });
+		const salt = await bcrypt.genSalt(Number(process.env.SALT));
+		const hashPassword = await bcrypt.hash(req.body.password, salt);
+		await new User({ ...req.body, password: hashPassword }).save();
+		res.status(201).send({ message: "User created successfully" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: "Internal Server Error" });
+	}
 });
 
 module.exports = router;

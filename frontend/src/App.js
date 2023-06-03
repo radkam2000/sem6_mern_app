@@ -1,36 +1,19 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { useState } from "react";
-import VideoPlayer from "./Components/VideoPlayer";
+import { Route, Routes, Navigate } from "react-router-dom";
+import "./index.css";
+import Main from "./Components/Main";
+import Signup from "./Components/SignUp";
+import Login from "./Components/Login";
 
 function App() {
-	const [videoId, setVideoId] = useState(null);
-
-	function playVideo(e, videoId) {
-		e.preventDefault();
-		setVideoId(videoId);
-	}
+	const user = localStorage.getItem("token");
 
 	return (
-		<div className="App">
-			{videoId && <VideoPlayer videoId={videoId}></VideoPlayer>}
-			<br />
-			<button
-				onClick={(e) => {
-					playVideo(e, "v1");
-				}}
-			>
-				Play video 1
-			</button>
-			<button
-				onClick={(e) => {
-					playVideo(e, "v2");
-				}}
-			>
-				Play video 2
-			</button>
-			<br />
-		</div>
+		<Routes>
+			{user && <Route path="/" exact element={<Main />} />}
+			<Route path="/signup" exact element={<Signup />} />
+			<Route path="/login" exact element={<Login />} />
+			<Route path="/" element={<Navigate replace to="/login" />} />
+		</Routes>
 	);
 }
 

@@ -4,13 +4,16 @@ const app = express();
 const cors = require("cors");
 const videos = require("./routes/videos");
 const user = require("./routes/user");
-const authenticate = require("./routes/authenticate");
+const auth = require("./routes/auth");
 
 app.use(express.json());
 app.use(cors());
 
+const connection = require("./db");
+connection();
+
 app.use("/api/user", user);
-app.use("/api/authenticate", authenticate);
+app.use("/api/auth", auth);
 app.use("/api/videos", videos);
 
 app.listen(process.env.PORT, () => {
