@@ -2,13 +2,26 @@ const router = require("express").Router();
 const fs = require("fs");
 
 const videoFiles = {
-	v1: "videos/sampleVideo1.mp4",
-	v2: "videos/sampleVideo2.mp4",
+	v1: {
+		path: "videos/sampleVideo1.mp4",
+		title: "Rabbit",
+		desc: "Video of a rabbit coming out from his hole",
+	},
+	v2: {
+		path: "videos/sampleVideo2.mp4",
+		title: "South park",
+		desc: "Part of the Sout Park episode",
+	},
 };
+
+router.get("/", (req, res) => {
+	console.log(videoFiles);
+	res.status(200).send({ videos: videoFiles });
+});
 
 router.get("/:filename", (req, res) => {
 	const fileName = req.params.filename;
-	const filePath = videoFiles[fileName];
+	const filePath = videoFiles[fileName].path;
 	if (!filePath) {
 		return res.status(404).send("file not found");
 	}

@@ -1,7 +1,10 @@
 const router = require("express").Router();
+require("dotenv").config();
 const { User, validate } = require("../models/User");
 const bcrypt = require("bcrypt");
-router.get("/", async (req, res) => {
+const jwt_auth = require("../middleware/jwt_auth");
+
+router.get("/", jwt_auth, async (req, res) => {
 	User.find()
 		.exec()
 		.then(async () => {
@@ -18,30 +21,44 @@ router.get("/", async (req, res) => {
 		});
 });
 
-router.delete("/", (req, res) => {
+router.delete("/", jwt_auth, (req, res) => {
 	User.find()
 		.exec()
 		.then(async () => {
-			console.log(`delete user: ${req.user._id}`);
-			await User.deleteOne({ _id: req.user._id });
-			res.redirect([307], "/");
+			const user = await User.findOne({ _id: req.user._id });
+			const salt = await bcrypt.genSalt(Number(process.env.SALT));
+
+			const isValid = await bcrypt.compare(
+				req.body.Password,
+				user.password
+			);
+			console.log(isValid);
+			if (isValid) {
+				await User.deleteOne({ _id: req.user._id });
+				es.redirect("/");
+			} else {
+				res.status(409).send({ message: "Wrong old Password" });
+			}
 		})
 		.catch((error) => {
+			console.error(error);
 			res.status(500).send({ message: error.message });
 		});
 });
 
-router.post("/password", (req, res) => {
+router.post("/password", jwt_auth, (req, res) => {
 	User.find()
 		.exec()
 		.then(async () => {
-			const user = await User.find({ _id: req.user._id });
+			const user = await User.findOne({ _id: req.user._id });
 			const salt = await bcrypt.genSalt(Number(process.env.SALT));
-			const hashOldPassword = await bcrypt.hash(
+
+			const isValid = await bcrypt.compare(
 				req.body.oldPassword,
-				salt
+				user.password
 			);
-			if (user.password === req.body.oldPassword) {
+			console.log(isValid);
+			if (isValid) {
 				const hashNewPassword = await bcrypt.hash(
 					req.body.newPassword,
 					salt
@@ -56,6 +73,7 @@ router.post("/password", (req, res) => {
 			}
 		})
 		.catch((error) => {
+			console.error(error);
 			res.status(500).send({ message: error.message });
 		});
 });
