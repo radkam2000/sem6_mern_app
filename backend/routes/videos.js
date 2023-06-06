@@ -15,7 +15,6 @@ const videoFiles = {
 };
 
 router.get("/", (req, res) => {
-	console.log(videoFiles);
 	res.status(200).send({ videos: videoFiles });
 });
 

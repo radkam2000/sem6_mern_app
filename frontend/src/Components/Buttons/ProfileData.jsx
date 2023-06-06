@@ -13,9 +13,9 @@ const ProfileDataBtn = (props) => {
 					},
 				};
 				const { data: res } = await axios(config);
-				console.log(res.data);
-				props.data(res.data);
-				props.msg(res.message);
+				props.setData(res.data);
+				props.setMsg(res.message);
+				props.setContent("profile");
 			} catch (error) {
 				console.log(error);
 				if (

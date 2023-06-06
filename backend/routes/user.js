@@ -5,20 +5,18 @@ const bcrypt = require("bcrypt");
 const jwt_auth = require("../middleware/jwt_auth");
 
 router.get("/", jwt_auth, async (req, res) => {
-	User.find()
-		.exec()
-		.then(async () => {
-			const user = await User.find({ _id: req.user._id });
-			//konfiguracja odpowiedzi res z przekazaniem listy użytkowników:
-			res.status(200).send({
-				data: user,
-				message: "Account Data",
-			});
-			console.log(user);
-		})
-		.catch((error) => {
-			res.status(500).send({ message: error.message });
+	try {
+		console.log(req.user._id);
+		const user = await User.findOne({ _id: req.user._id });
+		//konfiguracja odpowiedzi res z przekazaniem listy użytkowników:
+		console.log(user);
+		res.status(200).send({
+			data: user,
+			message: "Account Data",
 		});
+	} catch (error) {
+		res.status(500).send({ message: error.message });
+	}
 });
 
 router.delete("/", jwt_auth, (req, res) => {
