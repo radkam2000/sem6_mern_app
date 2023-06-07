@@ -24,18 +24,17 @@ router.delete("/", jwt_auth, (req, res) => {
 		.exec()
 		.then(async () => {
 			const user = await User.findOne({ _id: req.user._id });
-			const salt = await bcrypt.genSalt(Number(process.env.SALT));
-
+			console.log(req.body.password);
+			console.log(user.password);
 			const isValid = await bcrypt.compare(
-				req.body.Password,
+				req.body.password,
 				user.password
 			);
-			console.log(isValid);
 			if (isValid) {
 				await User.deleteOne({ _id: req.user._id });
-				es.redirect("/");
+				res.redirect("/");
 			} else {
-				res.status(409).send({ message: "Wrong old Password" });
+				res.status(409).send({ message: "Wrong password" });
 			}
 		})
 		.catch((error) => {

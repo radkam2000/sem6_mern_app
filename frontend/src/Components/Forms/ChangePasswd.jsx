@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+import { Alert, Button, Label, TextInput } from "flowbite-react";
 const ChangePasswd = (props) => {
 	const [data, setData] = useState({ oldPassword: "", newPassword: "" });
 	const [error, setError] = useState("");
@@ -32,34 +32,47 @@ const ChangePasswd = (props) => {
 			}
 		}
 	};
+
 	return (
-		<div className="form_container">
-			<form onSubmit={handleSubmit}>
-				<input
-					type="password"
-					placeholder="Password"
-					name="oldPassword"
-					onChange={handleChange}
-					value={data.oldPassword}
-					required
-					className="form_container__input"
-				/>
-				<input
-					type="password"
-					placeholder="Password"
-					name="newPassword"
-					onChange={handleChange}
-					value={data.newPassword}
-					required
-					className="form_container__input"
-				/>
-				{error && (
-					<div className="form_container__error-msg">{error}</div>
-				)}
-				<button type="submit" className="login-btn">
-					Zmien haslo
-				</button>
+		<div className="flex flex-col mb-4 mx-5">
+			<form onSubmit={handleSubmit} className=" flex flex-row gap-4">
+				<div className=" flex flex-col">
+					<div className="block">
+						<Label htmlFor="oldPassword" value="Old password" />
+					</div>
+					<TextInput
+						id="oldPassword"
+						type="password"
+						placeholder="Password"
+						name="oldPassword"
+						onChange={handleChange}
+						value={data.oldPassword}
+						required
+					/>
+				</div>
+				<div>
+					<div className="block">
+						<Label htmlFor="newPassword" value="New password" />
+					</div>
+					<TextInput
+						id="newPassword"
+						type="password"
+						placeholder="Password"
+						name="newPassword"
+						onChange={handleChange}
+						value={data.newPassword}
+						required
+					/>
+				</div>
+				<div className="mt-6">
+					<Button type="submit">Submit</Button>
+				</div>
 			</form>
+			{error && (
+				<Alert color="failure" className="mt-2">
+					<p>{error}</p>
+				</Alert>
+			)}
 		</div>
 	);
 };

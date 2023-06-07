@@ -2,18 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-import {
-	Button,
-	Checkbox,
-	FileInput,
-	Label,
-	Radio,
-	RangeSlider,
-	Select,
-	Textarea,
-	TextInput,
-	ToggleSwitch,
-} from "flowbite-react";
+import { Alert, Button, Label, TextInput } from "flowbite-react";
 
 const Login = () => {
 	const [data, setData] = useState({ email: "", password: "" });
@@ -39,56 +28,10 @@ const Login = () => {
 		}
 	};
 	return (
-		<div className="login_container">
-			<div className="login_container__form">
-				<div className="login_container__form__left">
-					<form className="form_container" onSubmit={handleSubmit}>
-						<h1>Login to Your Account</h1>
-						<input
-							type="email"
-							placeholder="Email"
-							name="email"
-							onChange={handleChange}
-							value={data.email}
-							required
-							className="form_container__input"
-						/>
-						<input
-							type="password"
-							placeholder="Password"
-							name="password"
-							onChange={handleChange}
-							value={data.password}
-							required
-							className="form_container__input"
-						/>
-						{error && (
-							<div className="form_container__error-msg">
-								{error}
-							</div>
-						)}
-						<button type="submit" className="login-btn">
-							Sign In
-						</button>
-					</form>
-				</div>
-				<div className="login_form__container__right">
-					<h1>New Here ?</h1>
-					<Link to="/signup">
-						<button type="button" className="register_btn">
-							Sign Up
-						</button>
-					</Link>
-				</div>
-			</div>
-		</div>
-	);
-};
-
-{
-	/* <form
-			className="flex max-w-md flex-col gap-4 mx-auto my-12"
-			onSubmit={handleSubmit}>
+		<form
+			className="flex max-w-md mx-auto my-12 flex-col gap-4"
+			onSubmit={handleSubmit}
+		>
 			<div>
 				<div className="mb-2 block">
 					<Label htmlFor="email" value="Email" />
@@ -117,6 +60,22 @@ const Login = () => {
 				/>
 			</div>
 			<Button type="submit">Submit</Button>
-		</form> */
-}
+			<div className="flex flex-row gap-2  block">
+				New Here?
+				<Link
+					to="/signup"
+					className="register_btn text-sky-800 underline"
+				>
+					Sign Up
+				</Link>
+			</div>{" "}
+			{error && (
+				<Alert color="failure" className="mt-2">
+					<p>{error}</p>
+				</Alert>
+			)}
+		</form>
+	);
+};
+
 export default Login;

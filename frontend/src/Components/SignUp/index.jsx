@@ -1,6 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+
+import { Alert, Button, Label, TextInput } from "flowbite-react";
+
 const Signup = () => {
 	const [data, setData] = useState({
 		firstName: "",
@@ -31,67 +34,80 @@ const Signup = () => {
 		}
 	};
 	return (
-		<div className="signup_container">
-			<div className="signup_container__form">
-				<div className="signup_container__form__left">
-					<h1>Welcome Back</h1>
-					<Link to="/login">
-						<button type="button" className="login_btn">
-							Sign in
-						</button>
-					</Link>
+		<form
+			className="flex max-w-md mx-auto my-12 flex-col gap-4"
+			onSubmit={handleSubmit}
+		>
+			<div>
+				<div className="mb-2 block">
+					<Label htmlFor="firstName" value="First Name" />
 				</div>
-				<div className="signup_container__form__left">
-					<form className="form_container" onSubmit={handleSubmit}>
-						<h1>Create Account</h1>
-						<input
-							type="text"
-							placeholder="First Name"
-							name="firstName"
-							onChange={handleChange}
-							value={data.firstName}
-							required
-							className="form_container__input"
-						/>
-						<input
-							type="text"
-							placeholder="Last Name"
-							name="lastName"
-							onChange={handleChange}
-							value={data.lastName}
-							required
-							className="form_container__input"
-						/>
-						<input
-							type="email"
-							placeholder="Email"
-							name="email"
-							onChange={handleChange}
-							value={data.email}
-							required
-							className="form_container__input"
-						/>
-						<input
-							type="password"
-							placeholder="Password"
-							name="password"
-							onChange={handleChange}
-							value={data.password}
-							required
-							className="form_container__input"
-						/>
-						{error && (
-							<div className="form_container__error-msg">
-								{error}
-							</div>
-						)}
-						<button type="submit" className="register-btn">
-							Sign Up
-						</button>
-					</form>
-				</div>
+				<TextInput
+					placeholder="First Name"
+					name="firstName"
+					id="firstName"
+					onChange={handleChange}
+					value={data.firstName}
+					required
+				/>
 			</div>
-		</div>
+			<div>
+				<div className="mb-2 block">
+					<Label htmlFor="lastName" value="Last Name" />
+				</div>
+				<TextInput
+					placeholder="Last Name"
+					name="lastName"
+					id="lastName"
+					onChange={handleChange}
+					value={data.lastName}
+					required
+				/>
+			</div>
+			<div>
+				<div className="mb-2 block">
+					<Label htmlFor="email" value="Email" />
+				</div>
+				<TextInput
+					type="email"
+					placeholder="Email"
+					name="email"
+					id="email"
+					onChange={handleChange}
+					value={data.email}
+					required
+				/>
+			</div>
+			<div>
+				<div className="mb-2 block">
+					<Label htmlFor="password" value="Password" />
+				</div>
+				<TextInput
+					type="password"
+					placeholder="Password"
+					name="password"
+					id="password"
+					onChange={handleChange}
+					value={data.password}
+					required
+				/>
+			</div>
+			<Button type="submit">Submit</Button>
+			<div className="flex flex-row gap-2  block">
+				Welcome back.
+				<Link
+					to="/login"
+					className="register_btn text-sky-800 underline"
+				>
+					Sign in
+				</Link>
+			</div>
+			{error && (
+				<Alert color="failure" className="mt-2">
+					<p>{error}</p>
+				</Alert>
+			)}
+		</form>
 	);
 };
 

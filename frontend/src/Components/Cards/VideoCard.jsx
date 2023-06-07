@@ -2,7 +2,7 @@ import obrazek from "./pngwing.png";
 const VideoCard = (props) => {
 	const id = props.id;
 	return (
-		<div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+		<div className="max-w-sm bg-slate-400 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 			<div
 				onClick={() => {
 					props.playVideo(id);
