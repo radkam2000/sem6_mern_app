@@ -1,6 +1,20 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
+import {
+	Button,
+	Checkbox,
+	FileInput,
+	Label,
+	Radio,
+	RangeSlider,
+	Select,
+	Textarea,
+	TextInput,
+	ToggleSwitch,
+} from "flowbite-react";
+
 const Login = () => {
 	const [data, setData] = useState({ email: "", password: "" });
 	const [error, setError] = useState("");
@@ -70,4 +84,39 @@ const Login = () => {
 		</div>
 	);
 };
+
+{
+	/* <form
+			className="flex max-w-md flex-col gap-4 mx-auto my-12"
+			onSubmit={handleSubmit}>
+			<div>
+				<div className="mb-2 block">
+					<Label htmlFor="email" value="Email" />
+				</div>
+				<TextInput
+					type="email"
+					placeholder="Email"
+					name="email"
+					onChange={handleChange}
+					value={data.email}
+					required
+				/>
+			</div>
+			<div>
+				<div className="mb-2 block">
+					<Label htmlFor="password" value="Password" />
+				</div>
+				<TextInput
+					id="password"
+					type="password"
+					placeholder="Password"
+					name="password"
+					onChange={handleChange}
+					value={data.password}
+					required
+				/>
+			</div>
+			<Button type="submit">Submit</Button>
+		</form> */
+}
 export default Login;
