@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const fs = require("fs");
+const multer = require("multer");
 
 const videoFiles = {
 	v1: {
@@ -13,6 +14,13 @@ const videoFiles = {
 		desc: "Part of the Sout Park episode",
 	},
 };
+
+const upload = multer({ dest: "videos/" });
+
+router.post("/upload", upload.single("file"), (req, res) => {
+	console.log(req.file.fileName);
+	res.send("chuj");
+});
 
 router.get("/", (req, res) => {
 	res.status(200).send({ videos: videoFiles });

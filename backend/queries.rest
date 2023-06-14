@@ -1,2 +1,2 @@
-get http://localhost:5000/api/videos/v1
+post http://localhost:5000/api/videos/upload
 
