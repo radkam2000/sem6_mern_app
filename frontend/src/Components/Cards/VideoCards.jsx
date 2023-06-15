@@ -1,22 +1,19 @@
 import VideoCard from "./VideoCard";
 const VideoCards = (props) => {
-	const playVideo = () => {};
 	var videos = props.videos;
-	console.log(videos);
-	videos = Object.entries(videos);
-	const test = (d) => {
-		console.log(d);
-	};
 	return (
-		<ul onLoad={test(videos)}>
+		<div className="flex row gap-4 mx-5 my-5">
 			{videos.map((video) => {
-				<VideoCard
-					title={video[1].title}
-					desc={video[1].desc}
-					playVideo={playVideo}
-				/>;
+				return (
+					<VideoCard
+						id={video.fileName}
+						title={video.title}
+						desc={video.desc}
+						playVideo={props.playVideo}
+					/>
+				);
 			})}
-		</ul>
+		</div>
 	);
 };
 

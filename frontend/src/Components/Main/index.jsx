@@ -2,22 +2,37 @@ import { useState } from "react";
 
 import VideoPlayer from "../VideoPlayer";
 import Navbar from "../Navbar";
-import { VideoCard } from "../Cards";
+import { VideoCard, VideoCards } from "../Cards";
 import Profile from "../Profile";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Main = () => {
 	const [content, setContent] = useState("cards");
 	const [data, setData] = useState();
 	const [msg, setMsg] = useState();
-	const [videosData, setVideosData] = useState();
+	const [videosData, setVideosData] = useState([]);
 	const [videoId, setVideoId] = useState();
+
+	const toastConfig = {
+		position: "bottom-right",
+		autoClose: 3000,
+		hideProgressBar: false,
+		closeOnClick: true,
+		pauseOnHover: true,
+		draggable: true,
+		progress: undefined,
+		theme: "dark",
+	};
+
+	const notify = (message) => toast(message, toastConfig);
 
 	const videos = async () => {
 		const { data: res } = await axios.get(
 			"http://localhost:5000/api/videos"
 		);
-		setVideosData(res.videos);
+		setVideosData(res.data);
 	};
 
 	const playVideo = (id) => {
@@ -29,25 +44,17 @@ const Main = () => {
 		<div className="Main" onLoad={videos}>
 			<Navbar setContent={setContent} setMsg={setMsg} setData={setData} />
 			{videosData && content === "cards" ? (
-				<div className="flex row gap-4 mx-5 my-5">
-					<VideoCard
-						id={"v1"}
-						title={videosData.v1.title}
-						desc={videosData.v1.desc}
-						playVideo={playVideo}
-					/>
-					<VideoCard
-						id={"v2"}
-						title={videosData.v2.title}
-						desc={videosData.v2.desc}
-						playVideo={playVideo}
-					/>
-				</div>
+				<VideoCards videos={videosData} playVideo={playVideo} />
 			) : (
 				""
 			)}
-			{content === "profile" ? <Profile data={data} /> : ""}
+			{content === "profile" ? (
+				<Profile data={data} notify={notify} />
+			) : (
+				""
+			)}
 			{content === "videoPlayer" ? <VideoPlayer videoId={videoId} /> : ""}
+			<ToastContainer />
 		</div>
 	);
 };

@@ -1,27 +1,49 @@
-import { Accordion } from "flowbite-react";
+import { Accordion, FileInput, TextInput, Button } from "flowbite-react";
 import { ChangePasswd, DeleteAccount } from "../Forms";
 import { AccordionTitle } from "flowbite-react/lib/esm/components/Accordion/AccordionTitle";
 import { AccordionPanel } from "flowbite-react/lib/esm/components/Accordion/AccordionPanel";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const Profile = (props) => {
 	const user = props.data;
 
-	const inputFile = useRef(null);
-	const chooseFile = async () => {
-		inputFile.current.click();
+	const [data, setData] = useState({
+		videoTitle: "Title",
+		videoDesc: "Description",
+		file: "",
+	});
+
+	const handleChange = ({ currentTarget: input }) => {
+		setData({ ...data, [input.name]: input.value });
 	};
 
-	const handleImport = async (file) => {
+	const handleFileChange = (e) => {
+		data.file = e.target.files[0];
+		if (data.file) {
+			const extension = data.file?.name.split(".").pop().toLowerCase();
+			if (extension !== "mp4") {
+				data.file = "";
+				props.notify("Choose mp4 file");
+			}
+		}
+	};
+
+	const handleImport = async () => {
 		const token = localStorage.getItem("token");
+		if (data.file?.name.split(".").pop().toLowerCase() !== "mp4") {
+			props.notify("Choose correct file");
+			return;
+		}
 		if (token) {
 			try {
 				const formData = new FormData();
-				formData.append("file", file);
+				formData.append("file", data.file);
+				formData.append("videoDesc", data.videoDesc);
+				formData.append("videoTitle", data.videoTitle);
 				const config = {
 					method: "post",
-					url: "http://localhost:5000/api/upload/",
+					url: "http://localhost:5000/api/videos/upload/",
 					headers: {
 						"Content-Type": "multipart/form-data",
 						"x-access-token": token,
@@ -29,6 +51,13 @@ const Profile = (props) => {
 					data: formData,
 				};
 				const { data: res } = await axios(config);
+				props.notify("File correctly send");
+				setData({
+					...data,
+					videoTitle: "Title",
+					videoDesc: "Description",
+					file: "",
+				});
 			} catch (error) {
 				if (
 					error.response &&
@@ -45,9 +74,32 @@ const Profile = (props) => {
 		<div>
 			<Accordion>
 				<Accordion.Panel>
-					<Accordion.Title>Profile data</Accordion.Title>
+					<Accordion.Title>Add new video</Accordion.Title>
 					<Accordion.Content>
-						<button onClick={chooseFile}>Importuj</button>
+						<div style={{ width: "400px" }}>
+							<FileInput
+								type="file"
+								name="file"
+								onChange={handleFileChange}
+							/>
+							<TextInput
+								type="text"
+								placeholder="VideoTitle"
+								name="videoTitle"
+								onChange={handleChange}
+								value={data.videoTitle}
+								required
+							/>
+							<TextInput
+								type="text"
+								placeholder="VideoDesc"
+								name="videoDesc"
+								onChange={handleChange}
+								value={data.videoDesc}
+								required
+							/>
+							<Button onClick={handleImport}>Submit</Button>
+						</div>
 					</Accordion.Content>
 				</Accordion.Panel>
 
