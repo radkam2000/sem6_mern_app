@@ -10,6 +10,7 @@ const VideoCards = (props) => {
 						title={video.title}
 						desc={video.desc}
 						playVideo={props.playVideo}
+						deleteVideo={props.deleteVideo}
 					/>
 				);
 			})}

@@ -40,16 +40,42 @@ const Main = () => {
 		setContent("videoPlayer");
 	};
 
+	const deleteVideo = async (id) => {
+		const token = localStorage.getItem("token");
+		if (token) {
+			try {
+				const config = {
+					method: "delete",
+					url: "http://localhost:5000/api/videos/" + id,
+					headers: {
+						"Content-Type": "application/json",
+						"x-access-token": token,
+					},
+				};
+				const { data: res } = await axios(config);
+				notify(res.message);
+				videos();
+			} catch (err) {
+				console.log(err);
+				notify("Error occured");
+			}
+		}
+	};
+
 	return (
 		<div className="Main" onLoad={videos}>
 			<Navbar setContent={setContent} setMsg={setMsg} setData={setData} />
 			{videosData && content === "cards" ? (
-				<VideoCards videos={videosData} playVideo={playVideo} />
+				<VideoCards
+					videos={videosData}
+					playVideo={playVideo}
+					deleteVideo={deleteVideo}
+				/>
 			) : (
 				""
 			)}
 			{content === "profile" ? (
-				<Profile data={data} notify={notify} />
+				<Profile data={data} notify={notify} refreshVideos={videos} />
 			) : (
 				""
 			)}

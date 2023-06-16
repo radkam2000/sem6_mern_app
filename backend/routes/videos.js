@@ -62,6 +62,21 @@ router.get("/", async (req, res) => {
 	}
 });
 
+router.delete("/:filename", async (req, res) => {
+	try {
+		const vid = await Video.findOne({ fileName: req.params.filename });
+		const filePath = vid.path;
+		await fs.unlink(filePath, (err) => {
+			console.error(err);
+		});
+		await vid.deleteOne();
+		res.status(200).send({ message: "Video deleted successfully" });
+	} catch (err) {
+		console.log(err);
+		res.status(500).send({ message: "Internal Server Error" });
+	}
+});
+
 router.get("/:filename", async (req, res) => {
 	try {
 		const vid = await Video.findOne({ fileName: req.params.filename });

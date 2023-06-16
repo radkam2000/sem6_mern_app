@@ -9,8 +9,8 @@ const Profile = (props) => {
 	const user = props.data;
 
 	const [data, setData] = useState({
-		videoTitle: "Title",
-		videoDesc: "Description",
+		videoTitle: "",
+		videoDesc: "",
 		file: "",
 	});
 
@@ -58,6 +58,7 @@ const Profile = (props) => {
 					videoDesc: "Description",
 					file: "",
 				});
+				props.refreshVideos();
 			} catch (error) {
 				if (
 					error.response &&
