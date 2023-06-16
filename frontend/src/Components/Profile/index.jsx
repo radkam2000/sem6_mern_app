@@ -54,8 +54,8 @@ const Profile = (props) => {
 				props.notify("File correctly send");
 				setData({
 					...data,
-					videoTitle: "Title",
-					videoDesc: "Description",
+					videoTitle: "",
+					videoDesc: "",
 					file: "",
 				});
 				props.refreshVideos();
