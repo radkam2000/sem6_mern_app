@@ -9,7 +9,6 @@ router.get("/", jwt_auth, async (req, res) => {
 		console.log(req.user._id);
 		const user = await User.findOne({ _id: req.user._id });
 		//konfiguracja odpowiedzi res z przekazaniem listy użytkowników:
-		console.log(user);
 		res.status(200).send({
 			data: user,
 			message: "Account Data",
@@ -24,8 +23,7 @@ router.delete("/", jwt_auth, (req, res) => {
 		.exec()
 		.then(async () => {
 			const user = await User.findOne({ _id: req.user._id });
-			console.log(req.body.password);
-			console.log(user.password);
+
 			const isValid = await bcrypt.compare(
 				req.body.password,
 				user.password

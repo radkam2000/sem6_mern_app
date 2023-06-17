@@ -3,19 +3,6 @@ const fs = require("fs");
 const multer = require("multer");
 const { Video, validate } = require("../models/Video");
 
-const videoFiles = {
-	v1: {
-		path: "videos/sampleVideo1.mp4",
-		title: "Rabbit",
-		desc: "Video of a rabbit coming out from his hole",
-	},
-	v2: {
-		path: "videos/sampleVideo2.mp4",
-		title: "South park",
-		desc: "Part of the Sout Park episode",
-	},
-};
-
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, __dirname + "/../videos/");
