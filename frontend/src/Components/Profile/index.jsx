@@ -35,6 +35,12 @@ const Profile = (props) => {
 			props.notify("Choose correct file");
 			return;
 		}
+
+		if (data.videoDesc === "" || data.videoTitle === "") {
+			props.notify("Fill form properly");
+			return;
+		}
+
 		if (token) {
 			try {
 				const formData = new FormData();
